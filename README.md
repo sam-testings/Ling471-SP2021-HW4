@@ -1,6 +1,6 @@
 # Ling471-SP2021-HW4
 
-A repository for the students to import/copy privately, containing function specs for Assignment 3.
+A repository for the students to import/copy privately, containing function specs for Assignment 4.
 
 Please do not fork this repository, or if you do fork, please do not push any solutions to your public copy.
 
