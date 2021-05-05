@@ -34,8 +34,6 @@ When debugging, if you want to start from the very beginning,
 start here. NB: Put the breakpoint not on the "def" line but below it.'''
 
 
-# This function is already fully written.
-# Do not modify it; only modify the createDataFrames function.
 def main(argv):
     df_train, df_test = createDataFrames(argv)
 
