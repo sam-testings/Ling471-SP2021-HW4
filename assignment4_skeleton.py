@@ -1,117 +1,109 @@
 # Skeleton for Assignment 4.
 # Ling471 Spring 2021.
 
-import sys
-import re
-import string
-from pathlib import Path
-
 import pandas as pd
-import numpy as np
+import string
+import sys
+
 from sklearn.feature_extraction.text import TfidfTransformer
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.naive_bayes import MultinomialNB
-from sklearn.metrics import accuracy_score
+
+# These are your own functions you wrote for Assignment 3:
+from evaluation import computePrecisionRecall, computeAccuracy
 
 
-'''
-The below function should be called on a file name.
-It opens the file, reads its contents, stores it in a variable.
-Then it removes punctuation marks, and returns the "cleaned" text.
-'''
+# Constants
+ROUND = 4
+GOOD_REVIEW = 1
+BAD_REVIEW = 0
+ALPHA = 1
 
 
-def cleanFileContents(f):
-    with open(f, 'r') as f:
-        text = f.read()
-    clean_text = text.translate(str.maketrans('', '', string.punctuation))
-    clean_text = re.sub(r'\s+', ' ', clean_text)
-    return clean_text
-
-
-'''The main function is the entry point of the program.
-When debugging, if you want to start from the very beginning,
-start here. NB: Put the breakpoint not on the "def" line but below it.'''
-
-
+# This function will be reporting errors due to variables which were not assigned any value.
+# Your task is to get it working! You can comment out things which aren't working at first.
 def main(argv):
-    df_train, df_test = createDataFrames(argv)
+
+    # Read in the data. NB: You may get an extra Unnamed column with indices; this is OK.
+    # If you like, you can get rid of it by passing a second argument to the read_csv(): index_col=[0].
+    data = pd.read_csv(argv[1])
+    # print(data.head()) # <- Verify the format. Comment this back out once done.
+
+    # TODO: Change as appropriate, if you stored data differently (e.g. if you put train data first).
+    # You may also make use of the "type" column here instead! E.g. you could sort data by "type".
+    # At any rate, make sure you are grabbing the right data! Double check with temporary print statements,
+    # e.g. print(test_data.head()).
+
+    test_data = data[:25000]  # Assuming the first 25,000 rows are test data.
+
+    # Assuming the second 25,000 rows are training data. Double check!
+    train_data = data[25000:50000]
 
     # TODO: Set the below 4 variables to contain:
     # X_train: the training data; y_train: the training data labels;
     # X_test: the test data; y_test: the test data labels.
-    # Access the data frames by column names.
-    # X_train = 
-    # y_train = 
-    # X_test = 
-    # y_test = 
+    # Access the data frames by the appropriate column names.
+    # X_train =
+    # y_train =
+    # X_test =
+    # y_test =
 
-    # TODO: Look up what the astype() method is doing and add a comment, explaining in your own words,
+    # TODO COMMENT: Look up what the astype() method is doing and add a comment, explaining in your own words,
     # what the next two lines are doing.
     y_train = y_train.astype('int')
     y_test = y_test.astype('int')
 
-    # TODO: Look up what TfidfVectorizer is and what its methods "fit_transform" and "transform" are doing,
+    # TODO COMMENT: Look up what TfidfVectorizer is and what its methods "fit_transform" and "transform" are doing,
     #  and add a comment, explaining in your own words,
     # what the next three lines are doing.
     tf_idf_vect = TfidfVectorizer(ngram_range=(1, 2))
     tf_idf_train = tf_idf_vect.fit_transform(X_train.values)
     tf_idf_test = tf_idf_vect.transform(X_test.values)
 
-    # TODO: Look up what "alpha" is in the MultinomialNB sklearn class, and add a comment explaining in your own words,
-    # what this parameter is for. The value "6" was picked by Olga through a cross-validation procedure. Explain in a comment,
-    # what that means. Try to be brief. You don't need to be formal or fully correct.
-    clf = MultinomialNB(alpha=6)
-    # TODO: Add a comment explaining in your own words what the "fit" method is doing.
+    # TODO COMMENT: The hyperparameter alpha is used for Laplace Smoothing.
+    # Add a brief comment, trying to explain, in your own words, what smoothing is for.
+    clf = MultinomialNB(alpha=ALPHA)
+    # TODO COMMENT: Add a comment explaining in your own words what the "fit" method is doing.
     clf.fit(tf_idf_train, y_train)
 
-    # TODO: Add a comment explaining in your own words what the "fit" method is doing in the next two lines.
+    # TODO COMMENT: Add a comment explaining in your own words what the "fit" method is doing in the next two lines.
     y_pred_train = clf.predict(tf_idf_train)
     y_pred_test = clf.predict(tf_idf_test)
 
-    acc = accuracy_score(y_test, y_pred_test, normalize=True) * float(100)
-    acc_train = accuracy_score(
-        y_train, y_pred_train, normalize=True) * float(100)
-    print(acc_train)
-    print(acc)
+    # TODO: Compute accuracy, precision, and recall, for both train and test data.
+    # Import and call your methods from evaluation.py which you wrote for HW2.
+    # NB: If you methods there accept lists, you may need to cast your pandas label objects to simple python lists:
+    # e.g. list(y_train) -- when passing them to your accuracy and precision and recall functions.
 
+    # accuracy_test =
+    # accuracy_train =
+    # precision_pos_test, recall_pos_test =
+    # precision_neg_test, recall_neg_test =
+    # precision_pos_train, recall_pos_train =
+    # precision_neg_train, recall_neg_train =
 
-'''
-Write a function which accepts a list of 4 directories:
-train/pos, train/neg, test/pos, and test/neg.
+    # Report the metrics via standard output.
+    # Please DO NOT modify the format (for grading purposes).
+    # You may change the variable names of course, if you used different ones above.
 
-It returns two pandas dataframes: one for the training data and another for the test data.
-The columns are labeled "label" and "text".
-
-'''
-
-
-def createDataFrames(argv):
-    train_pos = list(Path(argv[1]).glob("*.txt"))
-    train_neg = list(Path(argv[2]).glob("*.txt"))
-    test_pos = list(Path(argv[3]).glob("*.txt"))
-    test_neg = list(Path(argv[3]).glob("*.txt"))
-
-    train_data = []
-    test_data = []
-
-    # TODO: Populate train_data and test_data.
-    # Each entry should itself be a list of the form: [label, text],
-    # where label is 1 if the review is positive and 0 if the review is negative,
-    # and text is the cleaned review text.
-
-    # Your code here...
- 
-    # Column names to use in the dataframes
-    column_names = ["label", "text"]
-    # TODO: Create two pandas dataframes (pd.DataFrame() constructor), 
-    # one for training data and another for test data,
-    #  using the column names above.
-    
-    # df_train = 
-    # df_test = 
-    
-    return(df_train, df_test)
+    print("Train accuracy:           \t{}".format(round(accuracy_train, ROUND)))
+    print("Train precision positive: \t{}".format(
+        round(precision_pos_train, ROUND)))
+    print("Train recall positive:    \t{}".format(
+        round(recall_pos_train, ROUND)))
+    print("Train precision negative: \t{}".format(
+        round(precision_neg_train, ROUND)))
+    print("Train recall negative:    \t{}".format(
+        round(recall_neg_train, ROUND)))
+    print("Test accuracy:            \t{}".format(round(accuracy_test, ROUND)))
+    print("Test precision positive:  \t{}".format(
+        round(precision_pos_test, ROUND)))
+    print("Test recall positive:     \t{}".format(
+        round(recall_pos_test, ROUND)))
+    print("Test precision negative:  \t{}".format(
+        round(precision_neg_test, ROUND)))
+    print("Test recall negative:     \t{}".format(
+        round(recall_neg_test, ROUND)))
 
 
 if __name__ == "__main__":
