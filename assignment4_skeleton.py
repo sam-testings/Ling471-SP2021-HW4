@@ -63,10 +63,10 @@ def main(argv):
     # TODO COMMENT: The hyperparameter alpha is used for Laplace Smoothing.
     # Add a brief comment, trying to explain, in your own words, what smoothing is for.
     clf = MultinomialNB(alpha=ALPHA)
-    # TODO COMMENT: Add a comment explaining in your own words what the "fit" method is doing.
+    # TODO COMMENT: Add a comment explaining in your own words what the "fit()" method is doing.
     clf.fit(tf_idf_train, y_train)
 
-    # TODO COMMENT: Add a comment explaining in your own words what the "fit" method is doing in the next two lines.
+    # TODO COMMENT: Add a comment explaining in your own words what the "predict()" method is doing in the next two lines.
     y_pred_train = clf.predict(tf_idf_train)
     y_pred_test = clf.predict(tf_idf_test)
 
