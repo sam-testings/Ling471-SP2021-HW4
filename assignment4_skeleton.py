@@ -53,10 +53,11 @@ def main(argv):
     y_train = y_train.astype('int')
     y_test = y_test.astype('int')
 
-    # The next three lines are performing feature extraction. 
-    # They are choosing which words to count, basically, to discard some of the noise.
+    # The next three lines are performing feature extraction and word counting. 
+    # They are choosing which words to count frequencies for, basically, to discard some of the noise.
     # If you are curious, you could read about TF-IDF,
     # e.g. here: https://www.geeksforgeeks.org/tf-idf-model-for-page-ranking/
+    # TODO: Add a general brief comment on why choosing which words to count may be important.
     tf_idf_vect = TfidfVectorizer(ngram_range=(1, 2))
     tf_idf_train = tf_idf_vect.fit_transform(X_train.values)
     tf_idf_test = tf_idf_vect.transform(X_test.values)
