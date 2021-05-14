@@ -53,9 +53,8 @@ def main(argv):
     y_train = y_train.astype('int')
     y_test = y_test.astype('int')
 
-    # TODO COMMENT: Look up what TfidfVectorizer is and what its methods "fit_transform" and "transform" are doing,
-    #  and add a comment, explaining in your own words,
-    # what the next three lines are doing.
+    # The next three lines are performing feature extraction. The are choosing which words to count, basically, to discard some of the noise.
+    # If you are curious, you could read about TF-IDF e.g. here: https://www.geeksforgeeks.org/tf-idf-model-for-page-ranking/
     tf_idf_vect = TfidfVectorizer(ngram_range=(1, 2))
     tf_idf_train = tf_idf_vect.fit_transform(X_train.values)
     tf_idf_test = tf_idf_vect.transform(X_test.values)
