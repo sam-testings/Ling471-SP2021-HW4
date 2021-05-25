@@ -29,17 +29,36 @@ def createDataFrame(argv):
     # You may use a different way of creating a dataframe so long as the result is accurate.
     # TODO: Call the cleanFileContents() function on each file, as you are iterating over them.
     data = []
+
+
     # Your code here...
     # Try to create a list of lists, for example, as illustrated above.
     # Consider writing a separate function which takes a filename and returns a list representing the reivew vector.
     # This will make your code here cleaner.
 
+    for i in range(1, 5):
+        path = Path(argv[i])
+        for filename in path.iterdir():
+            if filename.is_file() and filename.suffix == '.txt':
+                row = []
+                clean_text = cleanFileContents(filename)
+                dir_name = argv[i].split('/')
+                label = 0
+                if dir_name[8] == "pos":
+                    label = 1
+                type = dir_name[0]
+                row.append(filename)
+                row.append(label)
+                row.append(type)
+                row.append(clean_text)
+                data.append(row)
     # Once you are done, the below code will only require modifications if your data variable is not a list of lists.
     # Sample column names; you can use different ones if you prefer,
     # but then make sure to make appropriate changes in assignment4_skeleton.py.
     column_names = ["file", "label", "type", "review"]
     # Sample way of creating a dataframe. This assumes that "data" is a LIST OF LISTS.
     df = pd.DataFrame(data=data, columns=column_names)
+    print(df)
     # Saving to a file:
     df.to_csv(new_filename)
 
